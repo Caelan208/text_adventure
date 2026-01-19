@@ -26,4 +26,9 @@ class Player
 	{
 		return health > 0;
 	}
+
+	public int GetHealth()
+	{
+		return health;
+	}
 }

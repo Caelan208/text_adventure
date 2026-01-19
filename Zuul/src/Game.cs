@@ -58,11 +58,17 @@ class Game
 		// Enter the main command loop. Here we repeatedly read commands and
 		// execute them until the player wants to quit.
 		bool finished = false;
-		while (!finished)
+		while (!finished && player.IsAlive())
 		{
 			Command command = parser.GetCommand();
 			finished = ProcessCommand(command);
 		}
+
+		if (!player.IsAlive())
+		{
+			Console.WriteLine("\nYou have died! Game Over.");
+		}
+		
 		Console.WriteLine("Thank you for playing.");
 		Console.WriteLine("Press [Enter] to continue.");
 		Console.ReadLine();
@@ -77,6 +83,7 @@ class Game
 		Console.WriteLine("Type 'help' if you need help.");
 		Console.WriteLine();
 		Console.WriteLine(player.CurrentRoom.GetLongDescription());
+		PrintStatus();
 	}
 
 	// Given a command, process (that is: execute) the command.
@@ -109,6 +116,12 @@ class Game
 		}
 
 		return wantToQuit;
+	}
+
+	// Print the player's current status
+	private void PrintStatus()
+	{
+		Console.WriteLine($"Health: {player.GetHealth()}/100");
 	}
 
 	// ######################################
@@ -148,6 +161,15 @@ class Game
 		}
 
 		player.CurrentRoom = nextRoom;
+		// Player takes damage when moving to another room
+		player.Damage(10);
 		Console.WriteLine(player.CurrentRoom.GetLongDescription());
+		PrintStatus();
+
+		// Check if player reached the office (win condition)
+		if (player.CurrentRoom.GetShortDescription() == "in the computing admin office")
+		{
+			Console.WriteLine("\nCongratulations! You have reached the office and won the game!");
+		}
 	}
 }
