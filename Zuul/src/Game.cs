@@ -42,7 +42,7 @@ class Game
 		office.AddExit("west", lab);
 
 		// Create your Items here
-		// ...
+		
 		// And add them to the Rooms
 		// ...
 

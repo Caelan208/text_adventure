@@ -58,4 +58,9 @@ class Room
 
 		return str;
 	}
+
+    internal void AddItem(Item plasmaCutter)
+    {
+        throw new NotImplementedException();
+    }
 }
