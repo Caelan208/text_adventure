@@ -2,6 +2,7 @@ class Player
 {
 	// fields
 	private int health;
+	private Inventory inventory;
 	// auto property
 	public Room CurrentRoom { get; set; }
 	// constructor
@@ -9,6 +10,7 @@ class Player
 	{
 		health = 100;
 		CurrentRoom = null;
+		inventory = new Inventory(20);
 	}
 	
 	// methods
@@ -30,5 +32,10 @@ class Player
 	public int GetHealth()
 	{
 		return health;
+	}
+
+	public Inventory GetInventory()
+	{
+		return inventory;
 	}
 }

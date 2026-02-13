@@ -5,6 +5,7 @@ class Room
 	// Private fields
 	private string description;
 	private Dictionary<string, Room> exits; // stores exits of this room.
+	private Dictionary<string, Item> items; // stores items in this room.
 
 	// Create a room described "description". Initially, it has no exits.
 	// "description" is something like "in a kitchen" or "in a court yard".
@@ -12,6 +13,7 @@ class Room
 	{
 		description = desc;
 		exits = new Dictionary<string, Room>();
+		items = new Dictionary<string, Item>();
 	}
 
 	// Define an exit for this room.
@@ -59,8 +61,19 @@ class Room
 		return str;
 	}
 
-    internal void AddItem(Item plasmaCutter)
+    public void AddItem(Item item)
     {
-        throw new NotImplementedException();
+        items.Add(item.Name, item);
+    }
+
+    public Item GetItem(string itemName)
+    {
+        if (items.ContainsKey(itemName))
+        {
+            Item item = items[itemName];
+            items.Remove(itemName);
+            return item;
+        }
+        return null;
     }
 }

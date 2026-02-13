@@ -1,4 +1,5 @@
 using System;
+using System.ComponentModel;
 
 
 class Game
@@ -41,10 +42,18 @@ class Game
 
 		office.AddExit("west", lab);
 
-		// Create your Items here
+		Item PlasmaCutter = new Item("PlasmaCutter", 2, "this is a plasmacutter you can use this to shoot the limbs off a necromorph.");
+		Item KeyCard = new Item("KeyCard", 1, "main keycard to acces general vicinities.");
+		Item NurseryKeyCard = new Item("NurseryKeyCard", 1, "gives acces to the nursery.");
+		Item IdWristband = new Item("IdWristband", 0, "gives acces to healing station.");
+		Item MedicalSpray = new Item("MedicalSpray", 3, "heals your wounds.");
 		
 		// And add them to the Rooms
-		// ...
+		outside.AddItem(PlasmaCutter);
+		theatre.AddItem(KeyCard);
+		pub.AddItem(NurseryKeyCard);
+		lab.AddItem(IdWristband);
+		office.AddItem(MedicalSpray);
 
 		// Start game outside
 		player.CurrentRoom = outside;
