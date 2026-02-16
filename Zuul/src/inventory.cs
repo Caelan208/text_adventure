@@ -12,7 +12,7 @@ this.items = new Dictionary<string, Item>();
 // methods 
 private int GetTotalWeight()
 {
-    int total = 0;
+    int total = 20;
     foreach (Item item in items.Values)
     {
         total += item.Weight;
@@ -22,22 +22,6 @@ private int GetTotalWeight()
 
 public bool Put(string itemName, Item item) 
 { 
-// Check het gewicht van het Item 
-int totalWeight = GetTotalWeight() + item.Weight;
-
-// Is er genoeg ruimte in de Inventory? 
-// Past het Item? 
-if (totalWeight > maxWeight)
-{
-    return false;
-}
-
-// Controleer of item al bestaat
-if (items.ContainsKey(itemName))
-{
-    return false;
-}
-
 // Zet Item in de Dictionary 
 items.Add(itemName, item);
 
@@ -47,18 +31,29 @@ return true;
 public Item Get(string itemName) 
 { 
 // Zoek Item in de Dictionary 
-if (!items.ContainsKey(itemName))
+if (items.ContainsKey(itemName))
 {
-    return null;
+    Item item = items[itemName];
+    // Verwijder Item uit Dictionary
+    items.Remove(itemName);
+    // Return Item of null 
+    return item;
+}
+return null;
 }
 
-// Haal item op
-Item item = items[itemName];
+public int ItemCount()
+{
+    return items.Count;
+}
 
-// Verwijder Item uit Dictionary (als gevonden)
-items.Remove(itemName);
+public Dictionary<string, Item> GetItems()
+{
+    return items;
+}
 
-// Return Item of null 
-return item;
-} 
+public bool HasItem(string itemName)
+{
+    return items.ContainsKey(itemName);
+}
 }

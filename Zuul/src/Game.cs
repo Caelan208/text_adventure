@@ -119,6 +119,15 @@ class Game
 			case "look":
 				Console.WriteLine(player.CurrentRoom.GetLongDescription());
 				break;
+			case "get":
+				GetItem(command);
+				break;
+			case "inventory":
+				ShowInventory();
+				break;
+			case "inspect":
+				InspectItem(command);
+				break;
 			case "quit":
 				wantToQuit = true;
 				break;
@@ -180,5 +189,84 @@ class Game
 		{
 			Console.WriteLine("\nCongratulations! You have reached the office and won the game!");
 		}
+	}
+
+	// Try to get an item from the room and put it in inventory.
+	private void GetItem(Command command)
+	{
+		if(!command.HasSecondWord())
+		{
+			// if there is no second word, we don't know what to get...
+			Console.WriteLine("Get what?");
+			return;
+		}
+
+		string itemName = command.SecondWord;
+
+		// Try to get the item from the room.
+		Item item = player.CurrentRoom.GetItem(itemName);
+		if (item == null)
+		{
+			Console.WriteLine("There is no "+itemName+" here!");
+			return;
+		}
+
+		// Try to add the item to inventory.
+		if (player.GetInventory().Put(itemName, item))
+		{
+			Console.WriteLine("You picked up the " + itemName + ".");
+		}
+		else
+		{
+			Console.WriteLine("You couldn't pick up the " + itemName + ".");
+		}
+	}
+
+	// Show the player's inventory.
+	private void ShowInventory()
+	{
+		Inventory inventory = player.GetInventory();
+		Console.WriteLine("\n=== INVENTORY ===");
+		
+		if (inventory.ItemCount() == 0)
+		{
+			Console.WriteLine("Your inventory is empty.");
+		}
+		else
+		{
+			int count = 1;
+			foreach (var kvp in inventory.GetItems())
+			{
+				Console.WriteLine(count + ". " + kvp.Key);
+				count++;
+			}
+		}
+		Console.WriteLine();
+	}
+
+	// Inspect an item from inventory to see its description.
+	private void InspectItem(Command command)
+	{
+		if(!command.HasSecondWord())
+		{
+			Console.WriteLine("Inspect what?");
+			return;
+		}
+
+		string itemName = command.SecondWord;
+		Inventory inventory = player.GetInventory();
+
+		// Check if item is in inventory
+		if (!inventory.HasItem(itemName))
+		{
+			Console.WriteLine("You don't have a " + itemName + "!");
+			return;
+		}
+
+		// Get the item and show its description
+		Item item = inventory.GetItems()[itemName];
+		Console.WriteLine("\n--- " + itemName + " ---");
+		Console.WriteLine(item.Description);
+		Console.WriteLine();
 	}
 }
