@@ -9,6 +9,6 @@ public Item(string name, int weight, string description)
 { 
     Name = name;
     Weight = weight; 
-    Description = description;
+     Description = description;
 }
 }
