@@ -21,25 +21,31 @@ class Game
     {
         // Create the rooms
         Room cockpit = new Room("cockpit of the infested ship (red lights are flashing and the alarm is blaring).");
-        Room cargohold = new Room("you entered the cargo hold, and you hear weird noises (footsteps and slight clicking).");
+        Room cargohold = new Room("in the cargo hold, and you hear weird noises (footsteps and slight clicking).");
         Room supplycloset = new Room("in the supply closet (you find a corpse of one of your colleauge missing a leg).");
-        Room nursery = new Room("in a computing lab");
-        Room escapepod = new Room("in the escape pod to leave the infested ship");
-
+        Room nursery = new Room("in the nursery (you see a lot of baby necromorphs crawling around).");
+        Room escapepod = new Room("in the escape pod");
+		Room infirmary = new Room("in the infirmary (you see a lot of blood and some corpses of your colleauges).");
+		Room engineering = new Room("in the engineering room (you see a lot of sparks and fire coming from the walls).");
         // Initialise room exits
         cockpit.AddExit("down", cargohold);
         cockpit.AddExit("south", nursery);
         cockpit.AddExit("west", supplycloset);
 
-        cargohold.AddExit("west", cockpit);
+        cargohold.AddExit("west",engineering);
         cargohold.AddExit("up", cockpit);
 
         supplycloset.AddExit("east", cockpit);
 
+
         nursery.AddExit("north", cockpit);
+		nursery.AddExit("west", infirmary);
         nursery.AddExit("east", escapepod);
 
-        escapepod.AddExit("west", nursery);
+		infirmary.AddExit("east", nursery);
+
+		engineering.AddExit("east", cargohold);
+		engineering.AddExit("south", escapepod);
 
         Item PlasmaCutter = new Item("PlasmaCutter", 2, "this is a plasmacutter you can use this to shoot the limbs off a necromorph.");
         Item KeyCard = new Item("KeyCard", 1, "main keycard to acces general vicinities.");
@@ -49,7 +55,7 @@ class Game
         
         // And add them to the Rooms
         cockpit.AddItem(PlasmaCutter);
-        cargohold.AddItem(KeyCard);
+        infirmary.AddItem(KeyCard);
         supplycloset.AddItem(NurseryKeyCard);
         cockpit.AddItem(IdWristband);
         nursery.AddItem(MedicalSpray);
@@ -113,7 +119,7 @@ class Game
                 PrintHelp();
                 break;
             case "go":
-                GoRoom(command);
+                wantToQuit = GoRoom(command);
                 break;
             case "look":
                 Console.WriteLine(player.CurrentRoom.GetLongDescription());
@@ -192,7 +198,7 @@ class Game
         // Check if player reached the escape pod (win condition)
         if (player.CurrentRoom.GetShortDescription() == "in the escape pod")
         {
-            Console.WriteLine("\nCongratulations! You have reached the escape pod, succesfully got away from the ship!");
+            Console.WriteLine("\nCongratulations! You have reached the escape pod, you succesfully got away from the ship!");
             return true;
         }
 		return false;
