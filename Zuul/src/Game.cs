@@ -20,26 +20,26 @@ class Game
     private void CreateRooms()
     {
         // Create the rooms
-        Room cockpit = new Room("cockpit of the infested ship");
+        Room cockpit = new Room("cockpit of the infested ship (red lights are flashing and the alarm is blaring).");
         Room cargohold = new Room("you entered the cargo hold, and you hear weird noises (footsteps and slight clicking).");
-        Room pub = new Room("in the campus pub");
-        Room lab = new Room("in a computing lab");
+        Room supplycloset = new Room("in the supply closet (you find a corpse of one of your colleauge missing a leg).");
+        Room nursery = new Room("in a computing lab");
         Room escapepod = new Room("in the escape pod to leave the infested ship");
 
         // Initialise room exits
         cockpit.AddExit("down", cargohold);
-        cockpit.AddExit("south", lab);
-        cockpit.AddExit("west", pub);
+        cockpit.AddExit("south", nursery);
+        cockpit.AddExit("west", supplycloset);
 
         cargohold.AddExit("west", cockpit);
         cargohold.AddExit("up", cockpit);
 
-        pub.AddExit("east", cockpit);
+        supplycloset.AddExit("east", cockpit);
 
-        lab.AddExit("north", cockpit);
-        lab.AddExit("east", escapepod);
+        nursery.AddExit("north", cockpit);
+        nursery.AddExit("east", escapepod);
 
-        escapepod.AddExit("west", lab);
+        escapepod.AddExit("west", nursery);
 
         Item PlasmaCutter = new Item("PlasmaCutter", 2, "this is a plasmacutter you can use this to shoot the limbs off a necromorph.");
         Item KeyCard = new Item("KeyCard", 1, "main keycard to acces general vicinities.");
@@ -50,9 +50,9 @@ class Game
         // And add them to the Rooms
         cockpit.AddItem(PlasmaCutter);
         cargohold.AddItem(KeyCard);
-        pub.AddItem(NurseryKeyCard);
-        lab.AddItem(IdWristband);
-        cockpit.AddItem(MedicalSpray);
+        supplycloset.AddItem(NurseryKeyCard);
+        cockpit.AddItem(IdWristband);
+        nursery.AddItem(MedicalSpray);
 
         // Start game outside
         player.CurrentRoom = cockpit;
@@ -164,13 +164,13 @@ class Game
 
     // Try to go to one direction. If there is an exit, enter the new
     // room, otherwise print an error message.
-    private void GoRoom(Command command)
+    private bool GoRoom(Command command)
     {
         if(!command.HasSecondWord())
         {
             // if there is no second word, we don't know where to go...
             Console.WriteLine("Go where?");
-            return;
+            return false;
         }
 
         string direction = command.SecondWord;
@@ -180,20 +180,22 @@ class Game
         if (nextRoom == null)
         {
             Console.WriteLine("There is no door to "+direction+"!");
-            return;
+            return false;
         }
 
         player.CurrentRoom = nextRoom;
         // Player takes damage when moving to another room
-        player.Damage(10);
+        player.Damage(5);
         Console.WriteLine(player.CurrentRoom.GetLongDescription());
         PrintStatus();
 
-        // Check if player reached the office (win condition)
-        if (player.CurrentRoom.GetShortDescription() == "in the computing admin office")
+        // Check if player reached the escape pod (win condition)
+        if (player.CurrentRoom.GetShortDescription() == "in the escape pod")
         {
             Console.WriteLine("\nCongratulations! You have reached the escape pod, succesfully got away from the ship!");
+            return true;
         }
+		return false;
     }
 
     // Try to get an item from the room and put it in inventory.
